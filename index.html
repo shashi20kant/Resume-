@@ -97,4 +97,37 @@ window.addEventListener('keydown', (e) => {
 </script>
 
 </body>
+</html>const slider = document.querySelector('.slider');
+const slides = document.querySelectorAll('.slide');
+const nextBtn = document.querySelector('.next');
+const prevBtn = document.querySelector('.prev');
+
+let currentIndex = 0;
+
+function showSlide(index) {
+  if(index < 0) index = slides.length - 1;
+  if(index >= slides.length) index = 0;
+  currentIndex = index;
+
+  // transform translateX for sliding effect
+  slider.style.transform = `translateX(-${index * 100}%)`;
+}
+
+// Button click events
+nextBtn.addEventListener('click', () => {
+  showSlide(currentIndex + 1);
+});
+
+prevBtn.addEventListener('click', () => {
+  showSlide(currentIndex - 1);
+});
+
+// Optional: Keyboard support
+window.addEventListener('keydown', (e) => {
+  if(e.key === 'ArrowRight') showSlide(currentIndex + 1);
+  if(e.key === 'ArrowLeft') showSlide(currentIndex - 1);
+});
+</script>
+
+</body>
 </html>
