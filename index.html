@@ -2,134 +2,190 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image Slide Reverse</title>
+<title>Smart Discount Helper</title>
 <style>
-  body {
-    margin: 0;
-    overflow-x: hidden;
+body{
     font-family: Arial, sans-serif;
-    background-color: #111;
-  }
+    background:#f4f6f8;
+    margin:0;
+    padding:10px;
+}
+.container{
+    max-width:420px;
+    margin:auto;
+    background:#fff;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+h2{
+    text-align:center;
+    margin-bottom:10px;
+}
+input, select, button{
+    width:100%;
+    padding:10px;
+    margin-top:8px;
+    font-size:16px;
+}
+button{
+    background:#007bff;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+button:hover{ background:#0056b3; }
 
-  .slider-container {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    position: relative;
-  }
+.item{
+    background:#f1f1f1;
+    padding:8px;
+    margin-top:6px;
+    border-radius:6px;
+    font-size:14px;
+}
 
-  .slider {
-    display: flex;
-    transition: transform 0.6s ease;
-    height: 100%;
-  }
+.result{
+    background:#e7f7e7;
+    padding:10px;
+    margin-top:10px;
+    border-radius:6px;
+    font-size:15px;
+}
 
-  .slide {
-    min-width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-  }
-
-  /* Buttons */
-  .btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 2rem;
-    color: white;
-    background: rgba(0,0,0,0.3);
-    border: none;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    z-index: 10;
-  }
-
-  .prev { left: 10px; }
-  .next { right: 10px; }
+.history{
+    margin-top:15px;
+}
+.history h3{
+    margin-bottom:5px;
+}
+.history-item{
+    background:#fafafa;
+    padding:6px;
+    margin-top:4px;
+    border:1px solid #ddd;
+    border-radius:5px;
+    font-size:13px;
+}
+.clear{
+    background:#dc3545;
+    margin-top:5px;
+}
 </style>
 </head>
-<body>
-<!-- FORCE UPDATE TEST 999 -->
-<h1 style="color:red">FORCE UPDATE 999</h1>
-  
-<div class="slider-container">
-  <div class="slider">
-    <div class="slide" style="background-image: url('https://picsum.photos/id/1018/1000/600');"></div>
-    <div class="slide" style="background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_example")
-    
-  </div>
 
-  <button class="btn prev">&#10094;</button>
-  <button class="btn next">&#10095;</button>
+<body>
+<div class="container">
+<h2>🛒 Smart Discount Helper</h2>
+
+<input type="number" id="price" placeholder="Item price (₹)">
+<input type="number" id="discount" placeholder="Discount value">
+
+<select id="discountType">
+    <option value="percent">Percent (%)</option>
+    <option value="flat">Flat ₹</option>
+</select>
+
+<button onclick="addItem()">Add Item</button>
+
+<div id="items"></div>
+
+<div class="result" id="result">
+    <b>Total:</b> ₹0 <br>
+    <b>You Save:</b> ₹0
+</div>
+
+<button onclick="saveBill()">Save Bill</button>
+
+<div class="history">
+<h3>🧾 History</h3>
+<div id="historyList"></div>
+<button class="clear" onclick="clearHistory()">Clear History</button>
+</div>
+
 </div>
 
 <script>
-const slider = document.querySelector('.slider');
-const slides = document.querySelectorAll('.slide');
-const nextBtn = document.querySelector('.next');
-const prevBtn = document.querySelector('.prev');
+let items = [];
 
-let currentIndex = 0;
+function addItem(){
+    let price = Number(document.getElementById("price").value);
+    let discount = Number(document.getElementById("discount").value);
+    let type = document.getElementById("discountType").value;
 
-function showSlide(index) {
-  if(index < 0) index = slides.length - 1;
-  if(index >= slides.length) index = 0;
-  currentIndex = index;
+    if(price<=0) return alert("Enter valid price");
 
-  // transform translateX for sliding effect
-  slider.style.transform = `translateX(-${index * 100}%)`;
+    let discountAmount = (type==="percent")
+      ? price * discount / 100
+        : discount;
+
+    let finalPrice = Math.max(price - discountAmount, 0);
+
+    items.push({price, discount, type, finalPrice, discountAmount});
+    renderItems();
+    calculateTotal();
+
+    document.getElementById("price").value="";
+    document.getElementById("discount").value="";
 }
 
-// Button click events
-nextBtn.addEventListener('click', () => {
-  showSlide(currentIndex + 1);
-});
-
-prevBtn.addEventListener('click', () => {
-  showSlide(currentIndex - 1);
-});
-
-// Optional: Keyboard support
-window.addEventListener('keydown', (e) => {
-  if(e.key === 'ArrowRight') showSlide(currentIndex + 1);
-  if(e.key === 'ArrowLeft') showSlide(currentIndex - 1);
-});
-</script>
-
-</body>
-</html>const slider = document.querySelector('.slider');
-const slides = document.querySelectorAll('.slide');
-const nextBtn = document.querySelector('.next');
-const prevBtn = document.querySelector('.prev');
-
-let currentIndex = 0;
-
-function showSlide(index) {
-  if(index < 0) index = slides.length - 1;
-  if(index >= slides.length) index = 0;
-  currentIndex = index;
-
-  // transform translateX for sliding effect
-  slider.style.transform = `translateX(-${index * 100}%)`;
+function renderItems(){
+    let div = document.getElementById("items");
+    div.innerHTML="";
+    items.forEach((i,idx)=>{
+        div.innerHTML += `
+        <div class="item">
+        Item ${idx+1}: ₹${i.price} → ₹${i.finalPrice}
+        </div>`;
+    });
 }
 
-// Button click events
-nextBtn.addEventListener('click', () => {
-  showSlide(currentIndex + 1);
-});
+function calculateTotal(){
+    let total=0, save=0;
+    items.forEach(i=>{
+        total+=i.finalPrice;
+        save+=i.discountAmount;
+    });
+    document.getElementById("result").innerHTML =
+        `<b>Total:</b> ₹${total.toFixed(2)}<br>
+         <b>You Save:</b> ₹${save.toFixed(2)}`;
+}
 
-prevBtn.addEventListener('click', () => {
-  showSlide(currentIndex - 1);
-});
+function saveBill(){
+    if(items.length===0) return;
+    let history = JSON.parse(localStorage.getItem("history")||"[]");
+    let total=items.reduce((s,i)=>s+i.finalPrice,0);
+    let save=items.reduce((s,i)=>s+i.discountAmount,0);
+    history.unshift({date:new Date().toLocaleString(), total, save});
+    localStorage.setItem("history",JSON.stringify(history));
+    items=[];
+    renderItems();
+    calculateTotal();
+    loadHistory();
+}
 
-// Optional: Keyboard support
-window.addEventListener('keydown', (e) => {
-  if(e.key === 'ArrowRight') showSlide(currentIndex + 1);
-  if(e.key === 'ArrowLeft') showSlide(currentIndex - 1);
-});
+function loadHistory(){
+    let list = document.getElementById("historyList");
+    list.innerHTML="";
+    let history = JSON.parse(localStorage.getItem("history")||"[]");
+    history.forEach(h=>{
+        list.innerHTML+=`
+        <div class="history-item">
+        ${h.date}<br>
+        Total: ₹${h.total} | Saved: ₹${h.save}
+        </div>`;
+    });
+}
+
+function clearHistory(){
+    if(confirm("Clear all history?")){
+        localStorage.removeItem("history");
+        loadHistory();
+    }
+}
+
+loadHistory();
 </script>
-
 </body>
 </html>
+
